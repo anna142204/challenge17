@@ -1,5 +1,5 @@
 import * as convert from "color-convert";
-export const isHexColor = (hex) => /^#[0-9A-F]{6}$/i.test(hex);
+
 
 export const generatePalette = (hex) => {
 	// crée un tableau vide.
@@ -19,4 +19,12 @@ export const generatePalette = (hex) => {
 
 	// Retourne le tableau.
   return colors;
+};
+
+export const isHexColor = (hex) => /^#[0-9A-F]{6}$/i.test(hex);
+export const hexToCSSHSL = (hex) => {
+	// tranforme le hex d'entrée en HSL.
+  const hsl = convert.hex.hsl(hex);
+	// Retourne une chaîne de caractère au format css.
+  return `${hsl[0]}deg ${hsl[1]}% ${hsl[2]}%`;
 };

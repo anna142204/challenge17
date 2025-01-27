@@ -1,5 +1,6 @@
-import { generatePalette } from "./modules/utils";
-import { Color } from "./modules/Color";
+import { generatePalette, isHexColor , hexToCSSHSL} from "./modules/utils";
+import { Color } from "./modules/colors";
+import * as convert from "color-convert";
 
 const form = document.querySelector("form");
 
@@ -14,6 +15,7 @@ const handleForm = (e) => {
 
         const palette = generatePalette(inputValue);
         console.log(inputValue, palette);
+        displayColors(inputValue,palette);
 
     } catch (err) {
         console.error(err)
@@ -22,7 +24,51 @@ const handleForm = (e) => {
     form.addEventListener("submit", handleForm);
 
   
+// const displayColors= (colors)=>{
+// colors.forEach(color => {
+//     const color = new Color(color);
+//     color.display(document.querySelector("main"));
+// });
+// }
+// Cherche l'élément <main> dans le DOM
+const colorContainer = document.querySelector("main");
 
-const containerElement = document.querySelector("main");
-const color = new Color([0,0,0]);
-color.display(containerElement);
+const displayColors = (input, palette) => {
+    // Efface tout le contenu de l'élément <main>
+    colorContainer.innerHTML = "";
+  
+    // Cherche l'élément header dans le DOM
+    const header = document.querySelector("header");
+    // Ajoute la classe "minimized" au header
+    header.classList.add("minimized");
+  
+    // Reçoit l'input du formulaire, et modifie la variable css "--shadow-color"
+    // avec ce qui sort de la fonction hexToCSSHSL.
+    document.documentElement.style.setProperty(
+      "--shadow-color",
+      hexToCSSHSL(input)
+    );
+  
+    // Crée un tableau avec les index de la palette que nous souhaitons
+    // transformer en hex pour le dégradé. On le map ensuite de telle sorte
+    // à recevoir en retour les valeur hex pour chaque couleur de la palette
+    // à l'index du tableau de départ. On ajoute également un "#" au début
+    // des chaînes de caractère.
+    const gradientColors = [
+      0,
+      Math.round(palette.length / 2),
+      palette.length - 1
+    ].map((index) => `#${convert.hsl.hex(palette[index])}`);
+  
+    // Utilise les valeurs du tableau gradientColors pour modifier le dégradé.
+    document.body.style.background = `linear-gradient(-45deg, ${gradientColors.join(
+      ","
+    )}`;
+  
+    // Redéfinis background-size
+    document.body.style.backgroundSize = `400% 400%`;
+  
+    // Prend chaque élément dans le tableau palette, instancie une classe avec
+    // ses données et appelle la méthode display() dessus.
+    palette.map((c) => new Color(c).display(colorContainer));
+  };
