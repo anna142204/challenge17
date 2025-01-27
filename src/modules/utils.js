@@ -1,4 +1,6 @@
 import * as convert from "color-convert";
+export const isHexColor = (hex) => /^#[0-9A-F]{6}$/i.test(hex);
+
 export const generatePalette = (hex) => {
 	// crée un tableau vide.
   const colors = [];
