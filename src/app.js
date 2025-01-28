@@ -1,5 +1,5 @@
 import { generatePalette, isHexColor , hexToCSSHSL} from "./modules/utils";
-import { Color } from "./modules/colors";
+import { Color } from "./modules/Colors";
 import * as convert from "color-convert";
 
 const form = document.querySelector("form");
