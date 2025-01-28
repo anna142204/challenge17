@@ -1,7 +1,10 @@
 import { generatePalette, isHexColor , hexToCSSHSL} from "./modules/utils";
 import { Color } from "./modules/Colors";
 import * as convert from "color-convert";
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css'; 
 
+const notyf = new Notyf();
 const form = document.querySelector("form");
 
 const handleForm = (e) => {
@@ -18,7 +21,7 @@ const handleForm = (e) => {
         displayColors(inputValue,palette);
 
     } catch (err) {
-        console.error(err)
+      notyf.error(err.message);
     }
 }
     form.addEventListener("submit", handleForm);
@@ -32,6 +35,13 @@ const handleForm = (e) => {
 // }
 // Cherche l'élément <main> dans le DOM
 const colorContainer = document.querySelector("main");
+colorContainer.addEventListener("click", handleClick)
+ 
+  const handleClick =  async (e) => {
+    const color = e.target.closest(".color").dataset.color;
+    await navigator.clipboard.writeText(color);
+    notyf.success(`copied ${color} to clipboard`);
+  } 
 
 const displayColors = (input, palette) => {
     // Efface tout le contenu de l'élément <main>
